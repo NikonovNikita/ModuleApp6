@@ -1,45 +1,76 @@
 ﻿using System;
 using System.Data;
 
-struct Data
+class User
 {
-    public string Name;
-    public int Length;
-    public int Version;
-    public int[] Array;
-}
-class Obj
-{
-    public string Name;
-    public bool IsAlive;
-    public int Weight;
+    private int age;
+    private string login;
+    private string email;
+
+    public string Login
+    {
+        get
+        {
+            return login;
+        }
+        set
+        {
+            if (value.Length < 3)
+            {
+                Console.WriteLine("Логин не может быть менее 3 символов!");
+            }
+            else
+            {
+                login = value;
+            }
+        }
+    }
+
+    public string Email
+    {
+        get
+        {
+            return email;
+        }
+        set
+        {
+            if (!value.Contains('@'))
+            {
+                Console.WriteLine("Неверный формат адреса почты!");
+            }
+            else
+            {
+                email = value;
+            }
+        }
+    }
+
+    public int Age
+    {
+        get
+        {
+            return age;
+        }
+        set
+        {
+            if (value < 18)
+            {
+                Console.WriteLine("Возраст должен быть не меньше 18!");
+            }
+            else
+            {
+                age = value;
+            }
+        }
+    }
 }
 class Program
 {
     static void Main(string[] args)
     {
-        Data data = new() { Name = "Запись", Length = 10, Version = 1, Array = new int[] {15, 30} };
-        Obj obj = new() { Name = "Стол", IsAlive = false, Weight = 15 };
-        
-        var dataCopy = data;
-        var objCopy = obj;
+        User user = new();
+        user.Age = 21;
+        Console.WriteLine(user.Age);
 
-        data.Name = "Значение";
-        data.Length = 35;
-        data.Version = 2;
-        data.Array[0] = 0;
-        dataCopy.Name = "Проверка";
-
-        obj.Name = "Кот";
-        obj.IsAlive = true;
-        obj.Weight = 3;
-
-        objCopy = new Obj { Name = obj.Name, IsAlive = obj.IsAlive, Weight = obj.Weight };
-
-        obj.Name = "Стол";
-        obj.IsAlive = false;
-        obj.Weight = 15;
-
-        Console.ReadKey();
     }
 }
