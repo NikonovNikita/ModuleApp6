@@ -25,7 +25,6 @@ class User
             }
         }
     }
-
     public string Email
     {
         get
