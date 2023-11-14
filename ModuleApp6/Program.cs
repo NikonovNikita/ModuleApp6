@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.SymbolStore;
+using System.Runtime.CompilerServices;
 
 abstract class Delivery
 {
@@ -46,20 +47,16 @@ class Courier
 }
 class Order<T, K> where T : Delivery where K : MyProducts
 {
-    private T TypeOfDelivery
+    internal T TypeOfDelivery
     {
         get
-        {
-            return TypeOfDelivery;
-        }
+        { return TypeOfDelivery; }
         set
-        {
-
-        }
+        { }
     }
-    private K TypesOfMyProducts
+    internal K TypesOfMyProducts
     {
-        get { return TypesOfMyProducts; }
+        get { return TypesOfMyProducts/*.ShowBasket*/; }
         set { }
     }
     internal Order(T TypeOfDelivery, K TypesOfMyProducts)
@@ -82,8 +79,7 @@ class MyProducts
     {
         ShowProducts();
         Console.WriteLine("Напишите желаемый товар в виде Телефон / ПК / Телевизор" +
-            "\nЧтобы посмотреть корзину товаров введите Корзина");
-        string YesNo;
+            "\nЧтобы посмотреть корзину товаров введите К\nЧтобы выйти и завершить выбор нажмите В");
         do
         {
             string Switch = Console.ReadLine();
@@ -101,20 +97,19 @@ class MyProducts
                     basket.Add(PC);
                     Console.WriteLine("Вы добавили в корзину ПК");
                     break;
-                case "Корзина":
+                case "К":
                     ShowBasket();
                     break;
+                case "В":
+                    ShowBasket();
+                    return;
                 default:
                     Console.WriteLine("Неизвестный товар!");
                     break;
             }
-            Console.WriteLine("Добавить что-то еще или посмотреть корзину? (Да / Нет)");
-            YesNo = Console.ReadLine();
-        } while (YesNo == "Да");
-        
-
+        } while (true);
     }
-    private void ShowBasket()
+    internal void ShowBasket()
     {
         Console.WriteLine("Ваша корзина товаров:");
         foreach (var temp in basket)
@@ -122,7 +117,7 @@ class MyProducts
             Console.WriteLine(temp);
         }
     }
-    private void ShowProducts()
+    internal void ShowProducts()
     {
         Console.WriteLine("Ассортимент товаров:");
         Console.WriteLine(TV);
@@ -138,13 +133,14 @@ class Program
         HomeDelivery homeDelivery;
         Console.WriteLine("Выберите тип доставки:\n1 - Доставка в магазин" +
             "\n2 - Доставка на дом курьером");
-        string Switch = Console.ReadLine();
         do
         {
+            string Switch = Console.ReadLine();
             switch (Switch)
             {
                 case "1":
                     shopDelivery = new ShopDelivery();
+                    Console.WriteLine("Вы выбрали доставку в магазин! Самовывоз из магазина по адресу {0}", shopDelivery.Address);
                     return shopDelivery;
                 case "2":
                     Console.Write("Введите адрес доставки: ");
@@ -152,21 +148,22 @@ class Program
                     homeDelivery = new HomeDelivery(address);
                     return homeDelivery;
                 default:
-                    Console.WriteLine("Введено некорректное значение! Ввод в формате 1 или 2");
+                    Console.WriteLine("Некорректный ввод! Формат 1 или 2!");
                     break;
             }
-        } while ();
-        return default;
+        } while (true);
     }
     static void Main(string[] args)
     {
         //Сделать перегрузку оператора + для сложения цен?
         Console.WriteLine("Добро пожаловать в магазин!");
-        MyProducts myProducts = new MyProducts();
+        MyProducts myProducts = new();
         myProducts.AddProducts();
         var choosenDelivery = ChooseDelivery();
         Order<Delivery, MyProducts> order = new(choosenDelivery, myProducts);
-        
+        // Console.WriteLine("Ваш заказ успешно сформирован!\nСписок ваших продуктов: {0}\nТип доставки: {1}", order.TypesOfMyProducts, 
+            // order.TypeOfDelivery);
+
 
 
 
